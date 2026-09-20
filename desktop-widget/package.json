@@ -1,0 +1,19 @@
+{
+  "name": "newsnow-desktop-card",
+  "productName": "NewsNow 桌面卡片",
+  "version": "1.0.0",
+  "private": true,
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "setup": "node node_modules/electron/install.js",
+    "test": "node --test server.test.cjs desktop-geometry.test.cjs"
+  },
+  "devDependencies": {
+    "electron": "44.4.3",
+    "playwright-core": "1.63.0"
+  },
+  "dependencies": {
+    "koffi": "3.3.1"
+  }
+}

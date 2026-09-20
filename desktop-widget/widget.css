@@ -1,0 +1,150 @@
+html, body { overflow: hidden !important; }
+body { border-radius: 14px; }
+#newsnow-desktop-bar {
+  position: fixed; inset: 0 0 auto; z-index: 2147483640; height: 34px;
+  display: flex; align-items: center; gap: 3px; padding: 0 8px 0 10px;
+  background: #f5f2ef; color: #665a56; border-bottom: 1px solid #83716b24;
+  font: 12px/1.2 system-ui, 'Microsoft YaHei', sans-serif; user-select: none;
+}
+.dark #newsnow-desktop-bar { background: #292225; color: #d7c6bf; }
+.widget-grip { display: flex; align-items: center; gap: 7px; flex: 1; height: 100%; cursor: move !important; min-width: 0; }
+.widget-grip * { cursor: move !important; }
+.widget-grip b { font-size: 12px; letter-spacing: .2px; }
+.widget-grip small { opacity: .55; font-size: 10px; }
+#newsnow-desktop-bar button { width: 27px; height: 25px; border: 0; border-radius: 6px; background: transparent; color: inherit; font-size: 20px; cursor: pointer; }
+#newsnow-desktop-bar button:hover { background: #8882; }
+.newsnow-resize { position: fixed; z-index: 2147483646; touch-action: none; }
+.newsnow-resize-n, .newsnow-resize-s { height: 5px; left: 10px; right: 10px; cursor: ns-resize !important; }
+.newsnow-resize-n { top: 0; } .newsnow-resize-s { bottom: 0; }
+.newsnow-resize-e, .newsnow-resize-w { width: 5px; top: 10px; bottom: 10px; cursor: ew-resize !important; }
+.newsnow-resize-e { right: 0; } .newsnow-resize-w { left: 0; }
+.newsnow-resize-nw, .newsnow-resize-ne, .newsnow-resize-sw, .newsnow-resize-se { width: 12px; height: 12px; }
+.newsnow-resize-nw { top: 0; left: 0; cursor: nwse-resize !important; }
+.newsnow-resize-ne { top: 0; right: 0; cursor: nesw-resize !important; }
+.newsnow-resize-sw { bottom: 0; left: 0; cursor: nesw-resize !important; }
+.newsnow-resize-se { bottom: 0; right: 0; cursor: nwse-resize !important; }
+.newsnow-resize-se::after { content: ''; position: absolute; width: 6px; height: 6px; bottom: 3px; right: 3px; border-right: 2px solid #998981; border-bottom: 2px solid #998981; opacity: .7; }
+#app { margin-top: 34px !important; height: calc(100vh - 34px) !important; }
+#app > div { padding-left: 10px !important; padding-right: 10px !important; }
+#app header { padding: 8px 2px !important; grid-template-columns: auto 1fr auto !important; gap: 6px; }
+#app header a[href*='/releases/'], #app header button[title='Github'] { display: none !important; }
+#app header [title='logo'] { width: 24px !important; height: 24px !important; }
+#app header .font-brand { font-size: 15px !important; }
+#app header > span:first-child a { gap: 5px !important; }
+#app main { margin-top: 0 !important; min-height: 0 !important; }
+#app main > div:first-child { margin-bottom: 10px !important; }
+#app main ol.grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)) !important; gap: 10px !important; }
+#app main ol.grid > li > div { height: clamp(160px, calc(100vh - 155px), 560px) !important; padding: 10px !important; border-radius: 12px !important; }
+#app footer { padding: 12px 0 !important; font-size: 10px !important; }
+#app main > div:first-child > span { padding: 7px 4px !important; }
+@media (max-width: 360px) {
+  #app header { display: none !important; }
+  #app main { padding-top: 8px; }
+  #app main ol.grid > li > div { height: clamp(160px, calc(100vh - 110px), 560px) !important; padding: 8px !important; }
+  #app main ol.grid > li { min-width: 0; font-size: 13px; }
+  #app main ol.grid > li .text-xl { font-size: 17px !important; }
+  #app main ol.grid > li a { overflow-wrap: anywhere; }
+  #app main ol.grid > li .text-base { font-size: 13px !important; line-height: 1.4 !important; }
+  #app main ol.grid > li a > .self-start { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  #app main ol.grid > li > div > div:first-child { margin-left: 0 !important; margin-right: 0 !important; }
+  #app main ol.grid > li > div > div:first-child .w-8 { width: 24px !important; height: 24px !important; }
+}
+@media (max-height: 380px) {
+  #app header { display: none !important; }
+  #app main { padding-top: 6px; }
+  #app main ol.grid > li > div { height: max(130px, calc(100vh - 82px)) !important; }
+}
+
+/* Liquid-glass desktop skin. The window itself is transparent, with readable
+   translucent panels rather than changing the opacity of text and controls. */
+html.desktop-glass { background: transparent !important; color-scheme: light; }
+html.desktop-glass body {
+  color: #24334b !important;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 2% 0%, #ffffffc9 0, #ffffff00 57%),
+    radial-gradient(ellipse at 100% 38%, #c9d0ff58 0, #c9d0ff00 65%),
+    linear-gradient(140deg, #e9f4ffba, #f3f0f9a8 50%, #dbeef4b8) !important;
+  box-shadow: inset 0 0 0 1px #ffffffc7, inset 1px 1px 0 1px #ffffff8c,
+    inset 0 -1px 0 1px #adbbcc66, inset 0 0 32px #ffffff45;
+}
+html.desktop-glass body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 2147483645;
+  border-radius: 22px; border: 1px solid #ffffffbb;
+  box-shadow: inset 0 1px 1px #ffffff, inset 0 -1px 1px #8d9cab55;
+}
+.desktop-glass #newsnow-desktop-bar {
+  color: #31435e; inset: 1px 1px auto; height: 35px; border-radius: 21px 21px 0 0;
+  padding-left: 14px; padding-right: 10px;
+  background: linear-gradient(115deg, #ffffff9c, #ffffff40 48%, #e9f4ff75);
+  border-bottom: 1px solid #ffffff75;
+  backdrop-filter: blur(22px) saturate(150%);
+}
+.desktop-glass .widget-grip small { opacity: .7; }
+.desktop-glass #newsnow-desktop-bar button:hover { background: #ffffffa8; box-shadow: 0 1px 5px #5d779722; }
+.desktop-glass #app { margin-top: 37px !important; height: calc(100vh - 37px) !important; }
+.desktop-glass #app header { background: transparent !important; backdrop-filter: blur(18px); }
+.desktop-glass #app main ol.grid > li > div {
+  color: #22324a !important;
+  background: linear-gradient(135deg, #ffffffac, #edf6ff70 60%, #f4f0ff85) !important;
+  border: 1px solid #ffffffc4; border-radius: 17px !important;
+  box-shadow: 0 5px 15px #405e8210, inset 0 1px 0 #ffffffed, inset 0 -1px 0 #b3c5d92e;
+  backdrop-filter: blur(24px) saturate(135%);
+}
+.desktop-glass #app main ol.grid > li > div > div:first-child { color: #294767; }
+.desktop-glass #app main ol.grid > li > div > div:first-child .text-xl { font-size: 18px; letter-spacing: -.3px; }
+.desktop-glass #app main ol.grid > li > div > div:first-child .bg-base { background: #e0edf9ad !important; color: #3f5f84 !important; }
+.desktop-glass #app main ol.grid > li > div > div:first-child .text-xs { color: #61728a; }
+.desktop-glass #app main ol.grid > li > div > .bg-base {
+  color: #263851 !important; background: linear-gradient(130deg, #ffffffb0, #f6faff85) !important;
+  border: 1px solid #ffffffb8; border-radius: 12px !important;
+  box-shadow: inset 0 1px 4px #7d9dba12;
+}
+.desktop-glass #app main ol.grid > li ol a { transition: background .18s ease; }
+.desktop-glass #app main ol.grid > li ol a:hover { background: #ffffffcb !important; }
+.desktop-glass #app main ol.grid > li ol a:visited { color: #64738a; }
+.desktop-glass #app main ol.grid > li ol a > span:first-child { background: #8baac21b; color: #536f8c; }
+.desktop-glass #app main > div:first-child > span,
+.desktop-glass #app header > span:nth-child(2) > span > span {
+  background: linear-gradient(125deg, #ffffffab, #edf4ff66) !important;
+  border: 1px solid #ffffffbb; border-radius: 22px !important;
+  box-shadow: 0 2px 8px #59718e13, inset 0 1px 0 #ffffffc2 !important;
+  backdrop-filter: blur(16px);
+}
+.desktop-glass #app .color-primary { color: #386ccb !important; }
+.desktop-glass #app header .text-primary-600 { color: #4c739f !important; }
+.desktop-glass #app footer { color: #5e7388 !important; }
+.desktop-glass .newsnow-resize-se::after { border-color: #6e8ba8aa; }
+
+/* Actual desktop refraction lives behind the readable DOM in a GPU canvas.
+   These surfaces deliberately do not repaint it with a milky opaque fill. */
+#newsnow-glass-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+html.desktop-refraction body { background: transparent !important; color: #fff !important; border-radius: 24px; box-shadow: none; }
+html.desktop-refraction body::after { border-radius: 24px; border-color: #ffffff65; box-shadow: inset 0 1px 0 #ffffff70, inset 0 -1px 0 #0000003a; }
+.desktop-refraction #app { position: relative; z-index: 1; color: #fff; text-shadow: 0 1px 3px #000b, 0 0 1px #0008; }
+.desktop-refraction #newsnow-desktop-bar { color: #fff; background: #ffffff09; border-radius: 23px 23px 0 0; border-bottom-color: #ffffff38; backdrop-filter: none; text-shadow: 0 1px 3px #0009; }
+.desktop-refraction #newsnow-desktop-bar button:hover { background: #ffffff26; box-shadow: none; }
+.desktop-refraction #app header { background: transparent !important; backdrop-filter: none; }
+.desktop-refraction #app main ol.grid > li > div {
+  color: #fff !important; background: transparent !important;
+  border-color: #ffffff55; box-shadow: inset 0 1px 0 #ffffff40, 0 2px 8px #00000012;
+  backdrop-filter: none;
+}
+.desktop-refraction #app main ol.grid > li > div > div:first-child,
+.desktop-refraction #app main ol.grid > li > div > div:first-child .text-xs { color: #fff; }
+.desktop-refraction #app main ol.grid > li > div > div:first-child .bg-base { color: #fff !important; background: #ffffff18 !important; }
+.desktop-refraction #app main ol.grid > li > div > .bg-base {
+  color: #fff !important; background: transparent !important; border-color: transparent; box-shadow: none;
+}
+.desktop-refraction #app main ol.grid > li ol a:hover { background: #ffffff1c !important; }
+.desktop-refraction #app main ol.grid > li ol a:visited { color: #e3e7f0; }
+.desktop-refraction #app main ol.grid > li ol a > span:first-child { color: #fff; background: #00000015; }
+.desktop-refraction #app main > div:first-child > span,
+.desktop-refraction #app header > span:nth-child(2) > span > span {
+  background: #ffffff12 !important; border-color: #ffffff50;
+  box-shadow: inset 0 1px 0 #ffffff35, 0 2px 8px #00000012 !important; backdrop-filter: none;
+}
+.desktop-refraction #app .color-primary,
+.desktop-refraction #app header .text-primary-600,
+.desktop-refraction #app footer { color: #fff !important; }
+.desktop-refraction .newsnow-resize-se::after { border-color: #ffffffb0; }
