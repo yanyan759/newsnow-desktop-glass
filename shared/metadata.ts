@@ -1,7 +1,7 @@
 import { sources } from "./sources"
 import { orderHottestSources } from "./source-order"
+import { aiSourceIds } from "./ai-sources"
 import { typeSafeObjectEntries, typeSafeObjectFromEntries } from "./type.util"
-import { updatedSourceIds as _updatedSourceIds } from "./updated-sources"
 import type { ColumnID, HiddenColumnID, Metadata, SourceID } from "./types"
 
 export const columns = {
@@ -24,17 +24,15 @@ export const columns = {
     zh: "关注",
   },
   realtime: {
-    zh: "实时",
+    zh: "最新动态",
   },
   hottest: {
-    zh: "最热",
+    zh: "AI 前沿",
   },
   updated: {
-    zh: "更新",
+    zh: "来源导航",
   },
 } as const
-
-const updatedSourceIds = [..._updatedSourceIds] as SourceID[]
 
 export const fixedColumnIds = ["focus", "hottest", "realtime", "updated"] as const satisfies Partial<ColumnID>[]
 export const hiddenColumns = Object.keys(columns).filter(id => !fixedColumnIds.includes(id as any)) as HiddenColumnID[]
@@ -56,17 +54,17 @@ export const metadata: Metadata = typeSafeObjectFromEntries(typeSafeObjectEntrie
     case "hottest":
       return [k, {
         name: v.zh,
-        sources: orderHottestSources(getSortedSourceIds("hottest")),
+        sources: orderHottestSources(typeSafeObjectEntries(sources).filter(([, source]) => !source.redirect).map(([id]) => id)),
       }]
     case "realtime":
       return [k, {
         name: v.zh,
-        sources: getSortedSourceIds("realtime"),
+        sources: orderHottestSources(getSortedSourceIds("realtime")),
       }]
     case "updated":
       return [k, {
         name: v.zh,
-        sources: updatedSourceIds.filter(id => sources[id] && !sources[id].redirect),
+        sources: aiSourceIds.filter(id => sources[id] && !sources[id].redirect),
       }]
     default:
       return [k, {

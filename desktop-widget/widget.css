@@ -148,3 +148,14 @@ html.desktop-refraction body::after { border-radius: 24px; border-color: #ffffff
 .desktop-refraction #app header .text-primary-600,
 .desktop-refraction #app footer { color: #fff !important; }
 .desktop-refraction .newsnow-resize-se::after { border-color: #ffffffb0; }
+
+/* Paper summaries and long source names must fit the small desktop window. */
+.ai-news-details { overflow-wrap: anywhere; }
+.ai-news-details details > summary { cursor: pointer; }
+.ai-news-details details[open] > summary { opacity: .6; }
+@media (max-width: 480px) {
+  #app .news-card-heading .text-xl { font-size: 15px !important; }
+  #app .news-card-heading .text-sm { font-size: 10px !important; }
+  #app .news-card-heading > div:first-child > span > span:first-child { gap: 3px 6px; }
+  #app .news-card-heading > div:last-child { gap: 5px !important; }
+}

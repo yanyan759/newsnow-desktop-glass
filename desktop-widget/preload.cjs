@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.documentElement.classList.add('desktop-glass');
   const bar = document.createElement('div');
   bar.id = 'newsnow-desktop-bar';
-  bar.innerHTML = '<span class="widget-grip" title="拖动此处移动桌面卡片">⠿ <b>NewsNow</b><small>桌面新闻</small></span><button type="button" title="刷新新闻页面" aria-label="刷新新闻页面">↻</button><button type="button" title="卡片设置" aria-label="卡片设置">⋯</button>';
+  bar.innerHTML = '<span class="widget-grip" title="拖动此处移动桌面卡片">⠿ <b>AI 前沿</b><small>论文 · 快讯 · 深读</small></span><button type="button" title="刷新新闻页面" aria-label="刷新新闻页面">↻</button><button type="button" title="卡片设置" aria-label="卡片设置">⋯</button>';
   document.body.append(bar);
   bar.querySelectorAll('button')[0].addEventListener('click', () => ipcRenderer.send('widget:command', 'refresh'));
   bar.querySelectorAll('button')[1].addEventListener('click', () => ipcRenderer.send('widget:command', 'menu'));

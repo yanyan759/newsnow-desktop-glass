@@ -1,4 +1,84 @@
 {
+  "arxiv": {
+    "title": "AI 最新论文",
+    "name": "arXiv",
+    "type": "realtime",
+    "desc": "cs.LG / cs.CL / cs.CV / cs.AI · 按提交时间排序，跨分类去重，周末保留最近论文",
+    "column": "tech",
+    "home": "https://arxiv.org",
+    "color": "red",
+    "interval": 1800000
+  },
+  "huggingface": {
+    "title": "Daily Papers",
+    "name": "Hugging Face",
+    "type": "hottest",
+    "desc": "社区精选论文，按投票数排序；社区日期与论文发表日期分别展示",
+    "column": "tech",
+    "home": "https://huggingface.co/papers",
+    "color": "amber",
+    "interval": 1800000
+  },
+  "tldr-ai": {
+    "title": "每日快讯",
+    "name": "TLDR AI",
+    "type": "realtime",
+    "desc": "抓取最近一期工作日简报，跳过赞助文章",
+    "column": "tech",
+    "home": "https://tldr.tech/ai",
+    "color": "violet",
+    "interval": 1800000
+  },
+  "qbitai": {
+    "title": "中文 AI 快讯",
+    "name": "量子位",
+    "type": "realtime",
+    "desc": "官方 RSS，保留原文日期与摘要",
+    "column": "tech",
+    "home": "https://www.qbitai.com",
+    "color": "blue",
+    "interval": 1800000
+  },
+  "arxivdaily": {
+    "title": "中文论文摘要",
+    "name": "arXivDaily",
+    "type": "realtime",
+    "desc": "第三方 AI 总结与中文翻译，请结合论文原文核验；按页面更新日期展示",
+    "column": "tech",
+    "home": "https://www.arxivdaily.com",
+    "color": "teal",
+    "interval": 3600000
+  },
+  "the-batch": {
+    "title": "每周深读",
+    "name": "The Batch",
+    "type": "realtime",
+    "desc": "DeepLearning.AI 周刊，显示最近发布的期刊及原始日期",
+    "column": "tech",
+    "home": "https://www.deeplearning.ai/the-batch",
+    "color": "sky",
+    "interval": 3600000
+  },
+  "import-ai": {
+    "title": "研究 · 政策 · 安全",
+    "name": "Import AI",
+    "type": "realtime",
+    "desc": "Jack Clark 周刊，保留最近一期及往期内容与真实日期",
+    "column": "tech",
+    "home": "https://importai.substack.com",
+    "color": "purple",
+    "interval": 3600000
+  },
+  "ai-channels": {
+    "title": "渠道入口",
+    "name": "一手动态与学习",
+    "type": "realtime",
+    "desc": "直达机器之心、新智元、研究者 X 与课程；此卡片不自动抓取动态",
+    "column": "tech",
+    "home": "https://huggingface.co/papers",
+    "color": "slate",
+    "interval": 3600000
+  },
   "v2ex": {
     "redirect": "v2ex-share",
     "name": "V2EX",

@@ -91,6 +91,10 @@ export interface NewsItem {
   mobileUrl?: string
   pubDate?: number | string
   extra?: {
+    summary?: string
+    /** Short Chinese explanation shown before the original summary. */
+    summaryZh?: string
+    links?: { label: string, url: string }[]
     hover?: string
     date?: number | string
     info?: false | string

@@ -3,6 +3,7 @@ import { useMount } from "react-use"
 import type { SourceID } from "@shared/types"
 import { useMemo, useRef, useState } from "react"
 import pinyin from "@shared/pinyin.json"
+import { isAISource } from "@shared/ai-sources"
 import { OverlayScrollbar } from "../overlay-scrollbar"
 import { CardWrapper } from "~/components/column/card"
 
@@ -124,7 +125,7 @@ function SourceItem({ item }: {
         <span
           className={$("w-4 h-4 rounded-md bg-cover")}
           style={{
-            backgroundImage: `url(/icons/${item.id.split("-")[0]}.png)`,
+            backgroundImage: `url(/icons/${isAISource(item.id) ? item.id : item.id.split("-")[0]}.png)`,
           }}
         />
         <span>{item.name}</span>

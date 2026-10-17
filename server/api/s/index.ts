@@ -1,12 +1,18 @@
 import type { SourceID, SourceResponse } from "@shared/types"
+import { isAISource } from "@shared/ai-sources"
 import { getters } from "#/getters"
 import { getCacheTable } from "#/database/cache"
 import type { CacheInfo } from "#/types"
+import { ensureChineseSummaries } from "#/utils/ai-summary"
 
 const info = {
   LICENCE: "MIT",
   Github: "https://github.com/ourongxing/newsnow",
   Sponsorship: "If you rely on this service, sponsorship is welcome to help it run for the long term. Scan the QR code https://raw.githubusercontent.com/ourongxing/newsnow/main/screenshots/reward.gif",
+}
+
+async function withChineseSummaries(id: SourceID, items: CacheInfo["items"]) {
+  return isAISource(id) ? ensureChineseSummaries(items) : items
 }
 
 export default defineEventHandler(async (event): Promise<SourceResponse> => {
@@ -37,7 +43,7 @@ export default defineEventHandler(async (event): Promise<SourceResponse> => {
             status: "success",
             id,
             updatedTime: now,
-            items: cache.items,
+            items: await withChineseSummaries(id, cache.items),
             info,
           }
         }
@@ -55,7 +61,7 @@ export default defineEventHandler(async (event): Promise<SourceResponse> => {
               status: "cache",
               id,
               updatedTime: cache.updated,
-              items: cache.items,
+              items: await withChineseSummaries(id, cache.items),
               info,
             }
           }
@@ -83,7 +89,7 @@ export default defineEventHandler(async (event): Promise<SourceResponse> => {
           status: "cache",
           id,
           updatedTime: cache.updated,
-          items: cache.items,
+          items: await withChineseSummaries(id, cache.items),
           info,
         }
       } else {

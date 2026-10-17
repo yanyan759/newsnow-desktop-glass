@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react"
 import type { SourceID } from "@shared/types"
+import { isAISource } from "@shared/ai-sources"
 import type { BaseEventPayload, ElementDragType } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types"
 import { extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge"
 import { reorderWithEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge"
@@ -147,7 +148,7 @@ function CardOverlay({ id }: { id: SourceID }) {
           <div
             className={$("w-8 h-8 rounded-full bg-cover")}
             style={{
-              backgroundImage: `url(/icons/${id.split("-")[0]}.png)`,
+              backgroundImage: `url(/icons/${isAISource(id) ? id : id.split("-")[0]}.png)`,
             }}
           />
           <span className="flex flex-col">

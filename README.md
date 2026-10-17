@@ -13,7 +13,7 @@
 | 新闻聚合网站、各新闻源和后端服务 | 来自 [NewsNow](https://github.com/newsnext/newsnow)，保留原项目结构 |
 | Windows 桌面外壳 | 新增 `desktop-widget/`，Electron + Win32 原生桌面子窗口 |
 | 液态玻璃背景 | 本改装版新增：采集桌面图标层、读取静态壁纸，通过 WebGL 模拟曲面折射 |
-| 新闻顺序 | 「最热」前三项调整为 **36氪 → GitHub → 华尔街见闻**，其余内容源继续保留 |
+| 新闻来源 | 首页改为 **arXiv → Hugging Face Daily Papers → TLDR AI → 量子位 → arXivDaily → The Batch → Import AI → 渠道入口**，面向 AI 专业学生 |
 | 本地运行 | 增加服务启动与退出管理、桌面快捷方式、位置保存、缩放适配和页面缓存刷新 |
 
 本地基础源码来自用户提供的 NewsNow ZIP，未包含上游 Git 历史，无法准确还原该 ZIP 对应的上游提交。因此这里按改装版本管理，不宣称与当前上游 main 完全一致。保留的网页代码还包含本地 PWA 更新与依赖调整。
@@ -29,6 +29,18 @@
 - **托盘控制**：显示、隐藏、刷新、恢复默认位置、重新贴到桌面和完全退出。
 - **一键启动**：首次安装后双击桌面快捷方式，自动启动本地新闻服务，无需每次打开终端。
 - **保留网页能力**：热门 / 实时 / 关注栏目、缓存，以及配置后可用的 GitHub 登录与同步能力。
+
+## AI 前沿阅读（2026-10-17 改造）
+
+首页固定打开「AI 前沿」，前两张卡片是 **arXiv** 与 **Hugging Face Daily Papers**。每条内容先显示简短的「中文概括」，同时保留原文摘要与相关链接；长摘要点击展开/收起。HF 按社区投票排序，分别标注社区日期与论文发表日期；热度不代表论文质量。
+
+运行期间每 **15 分钟**检查 AI 来源，后台窗口也会检查。论文/快讯抓取间隔为 30 分钟，周刊与中文摘要为 60 分钟，避免重复请求；关闭应用或电脑休眠期间不抓取。重新启动后会按缓存时效获取内容。没有配置系统定时任务或开机自启。
+
+arXiv 使用官方 API 查询 `cs.LG / cs.CL / cs.CV / cs.AI`，合并去重，显示最近 30 篇；周末仍可查看最近论文。TLDR 从归档选择最近一期并跳过赞助文章。量子位和 Import AI 使用 RSS，The Batch 提取最近周刊。arXivDaily 的中文标题和摘要来自第三方 AI 翻译/总结，需结合原论文核验。
+
+机器之心、新智元、Karpathy、Jim Fan、Sam Altman、Anthropic、李沐和李宏毅放在「一手动态与学习」卡片中，并明确标注为**访问入口**；不把固定链接当作已自动抓取的新闻。原来的综合新闻可从「更多」搜索并加入关注。
+
+完整来源、刷新规则和运行方式见 [AI 来源说明](docs/AI来源说明.md)。
 
 ## 环境要求
 
@@ -67,7 +79,7 @@ npm ci
 npm run setup
 
 # 把本机真实 Node 路径写入配置；不要填写 electron.exe
-$nodeExecutable = (Get-Command node -CommandType Application).Source
+$nodeExecutable = (Get-Command node -CommandType Application | Select-Object -First 1).Source
 $configJson = @{ nodePath = $nodeExecutable } | ConvertTo-Json
 [System.IO.File]::WriteAllText(
   (Join-Path (Get-Location).Path 'config.json'),
@@ -88,9 +100,9 @@ npm start
 
 ### 3. 日常使用
 
-双击桌面 **NewsNow 新闻卡片**，然后回到桌面查看。
+双击桌面 **AI 前沿新闻卡片**，然后回到桌面查看。
 
-- 拖动顶部「NewsNow 桌面新闻」移动卡片。
+- 拖动顶部「AI 前沿」移动卡片。
 - 拖动边缘或右下角缩放；最小为 280×240。
 - 右上角「⋯」或系统托盘右键打开菜单。
 - 隐藏后再次双击快捷方式可恢复；「完全退出」只关闭插件自己启动的新闻服务。
@@ -137,6 +149,7 @@ node --test qa/desktop-capture.test.cjs
 # 以下测试启动真实桌面窗口；运行前完全退出插件
 node qa/refraction-check.cjs
 node desktop.integration.cjs
+node qa/ai-feeds-check.cjs
 ```
 
 原生测试需要 Windows 桌面会话；集成测试会移动并缩放卡片。验收脚本可能把桌面图标等个人内容写入 `desktop-widget/qa/` 截图，输出已被 Git 忽略。仓库保留可复现的源码和测试，不包含本机截图、数据库、日志、依赖目录或构建产物。

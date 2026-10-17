@@ -3,7 +3,10 @@ import { useQuery } from "@tanstack/react-query"
 import { AnimatePresence, motion, useInView } from "framer-motion"
 import { useWindowSize } from "react-use"
 import { forwardRef, useImperativeHandle } from "react"
+import { aiRefreshInterval, isAISource } from "@shared/ai-sources"
+import { getCachedSource } from "@shared/source-cache"
 import { OverlayScrollbar } from "../common/overlay-scrollbar"
+import { NewsDetails } from "./news-details"
 import { safeParseString } from "~/utils"
 
 export interface ItemsProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -58,15 +61,16 @@ function NewsCard({ id, setHandleRef }: NewsCardProps) {
       const id = queryKey[1] as SourceID
       let url = `/s?id=${id}`
       const headers: Record<string, any> = {}
+      const cached = getCachedSource(cacheSources, id, sources[id].interval)
       if (refetchSources.has(id)) {
         url = `/s?id=${id}&latest`
         const jwt = safeParseString(localStorage.getItem("jwt"))
         if (jwt) headers.Authorization = `Bearer ${jwt}`
         refetchSources.delete(id)
-      } else if (cacheSources.has(id)) {
+      } else if (cached) {
         // wait animation
         await delay(200)
-        return cacheSources.get(id)
+        return cached
       }
 
       const response: SourceResponse = await myFetch(url, {
@@ -95,9 +99,11 @@ function NewsCard({ id, setHandleRef }: NewsCardProps) {
       return response
     },
     placeholderData: prev => prev,
-    staleTime: Infinity,
+    staleTime: sources[id].interval,
+    refetchInterval: isAISource(id) ? aiRefreshInterval : false,
+    refetchIntervalInBackground: true,
     refetchOnMount: false,
-    refetchOnReconnect: false,
+    refetchOnReconnect: isAISource(id),
     refetchOnWindowFocus: false,
     retry: false,
   })
@@ -106,38 +112,40 @@ function NewsCard({ id, setHandleRef }: NewsCardProps) {
 
   return (
     <>
-      <div className={$("flex justify-between mx-2 mt-0 mb-2 items-center")}>
-        <div className="flex gap-2 items-center">
+      <div className={$("news-card-heading flex justify-between mx-2 mt-0 mb-2 items-center gap-2")}>
+        <div className="flex gap-2 items-center min-w-0">
           <a
-            className={$("w-8 h-8 rounded-full bg-cover")}
+            className={$("w-8 h-8 shrink-0 rounded-full bg-cover")}
             target="_blank"
             href={sources[id].home}
             title={sources[id].desc}
             style={{
-              backgroundImage: `url(/icons/${id.split("-")[0]}.png)`,
+              backgroundImage: `url(/icons/${isAISource(id) ? id : id.split("-")[0]}.png)`,
             }}
           />
-          <span className="flex flex-col">
-            <span className="flex items-center gap-2">
+          <span className="flex flex-col min-w-0">
+            <span className="flex items-center flex-wrap gap-x-2 gap-y-1">
               <span
-                className="text-xl font-bold"
+                className="text-xl font-bold truncate"
                 title={sources[id].desc}
               >
                 {sources[id].name}
               </span>
               {sources[id]?.title && <span className={$("text-sm", `color-${sources[id].color} bg-base op-80 bg-op-50! px-1 rounded`)}>{sources[id].title}</span>}
             </span>
-            <span className="text-xs op-70"><UpdatedTime isError={isError} updatedTime={data?.updatedTime} /></span>
+            <span className="text-xs op-70"><UpdatedTime isError={isError} updatedTime={data?.updatedTime} cached={data?.status === "cache"} /></span>
           </span>
         </div>
-        <div className={$("flex gap-2 text-lg", `color-${sources[id].color}`)}>
+        <div className={$("flex shrink-0 gap-2 text-lg", `color-${sources[id].color}`)}>
           <button
             type="button"
+            aria-label={`刷新 ${sources[id].name}`}
             className={$("btn i-ph:arrow-counter-clockwise-duotone", isFetching && "animate-spin i-ph:circle-dashed-duotone")}
             onClick={() => refresh(id)}
           />
           <button
             type="button"
+            aria-label={`关注 ${sources[id].name}`}
             className={$("btn", isFocused ? "i-ph:star-fill" : "i-ph:star-duotone")}
             onClick={toggleFocus}
           />
@@ -164,14 +172,18 @@ function NewsCard({ id, setHandleRef }: NewsCardProps) {
       >
         <div className={$("transition-opacity-500", isFetching && "op-20")}>
           {!!data?.items?.length && (sources[id].type === "hottest" ? <NewsListHot items={data.items} /> : <NewsListTimeLine items={data.items} />)}
+          {isError && !data?.items?.length && <p className="text-sm op-70">暂时无法获取，请稍后刷新或点击来源名称访问原站。</p>}
+          {data && !data.items.length && <p className="text-sm op-70">来源暂无新内容，可点击来源名称查看。</p>}
         </div>
       </OverlayScrollbar>
     </>
   )
 }
 
-function UpdatedTime({ isError, updatedTime }: { updatedTime: any, isError: boolean }) {
+function UpdatedTime({ isError, updatedTime, cached }: { updatedTime: any, isError: boolean, cached: boolean }) {
   const relativeTime = useRelativeTime(updatedTime ?? "")
+  if (isError) return relativeTime ? "更新失败 · 保留上次内容" : "获取失败"
+  if (cached && relativeTime) return `${relativeTime}缓存`
   if (relativeTime) return `${relativeTime}更新`
   if (isError) return "获取失败"
   return "加载中..."
@@ -231,29 +243,31 @@ function NewsListHot({ items }: { items: NewsItem[] }) {
   return (
     <ol className="flex flex-col gap-2">
       {items?.map((item, i) => (
-        <a
-          href={width < 768 ? item.mobileUrl || item.url : item.url}
-          target="_blank"
-          key={item.id}
-          title={item.extra?.hover}
-          className={$(
-            "flex gap-2 items-center items-stretch relative cursor-pointer [&_*]:cursor-pointer transition-all",
-            "hover:bg-neutral-400/10 rounded-md pr-1 visited:(text-neutral-400)",
-          )}
-        >
-          <span className={$("bg-neutral-400/10 min-w-6 flex justify-center items-center rounded-md text-sm")}>
-            {i + 1}
-          </span>
-          {!!item.extra?.diff && <DiffNumber diff={item.extra.diff} />}
-          <span className="self-start line-height-none">
-            <span className="mr-2 text-base">
-              {item.title}
+        <li key={item.id} className="relative">
+          <a
+            href={width < 768 ? item.mobileUrl || item.url : item.url}
+            target="_blank"
+            title={item.extra?.hover}
+            className={$(
+              "flex gap-2 items-center items-stretch relative cursor-pointer [&_*]:cursor-pointer transition-all",
+              "hover:bg-neutral-400/10 rounded-md pr-1 visited:(text-neutral-400)",
+            )}
+          >
+            <span className={$("bg-neutral-400/10 min-w-6 flex justify-center items-center rounded-md text-sm")}>
+              {i + 1}
             </span>
-            <span className="text-xs text-neutral-400/80 truncate align-middle">
-              <ExtraInfo item={item} />
+            {!!item.extra?.diff && <DiffNumber diff={item.extra.diff} />}
+            <span className="self-start line-height-none">
+              <span className="mr-2 text-base">
+                {item.title}
+              </span>
+              <span className="text-xs text-neutral-400/80 truncate align-middle">
+                <ExtraInfo item={item} />
+              </span>
             </span>
-          </span>
-        </a>
+          </a>
+          <NewsDetails item={item} />
+        </li>
       ))}
     </ol>
   )
@@ -286,6 +300,7 @@ function NewsListTimeLine({ items }: { items: NewsItem[] }) {
           >
             {item.title}
           </a>
+          <NewsDetails item={item} />
         </li>
       ))}
     </ol>
